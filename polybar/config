@@ -1,0 +1,425 @@
+; Main Polybar config
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+; Colors
+
+[colors]
+transparent = #00000000
+background = #393939
+backgroundAlt = #444
+foreground = #dfdfdf
+foregroundAlt = #555
+primary = #FFB52A
+secondary = #E60053
+accent =
+;spotifyGreen = #6EA368 official one, but too light
+spotifyGreen = #1DB954
+alert = #BD2C40
+i3Line = ${self.primary}
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+; Settings
+
+[settings]
+screenchange-reload = true
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+; Global
+
+[global/wm]
+margin-top = 5
+margin-bottom = 5
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+; Main bar
+
+[bar/main]
+;-----------------------------
+; Bar settings
+
+;monitor = eDP-1
+width = 100%
+height = 27
+radius = 0.0
+bottom = false
+fixed-center = true
+
+background = ${colors.background}
+foreground = ${colors.foreground}
+
+border-size = 0
+border-color = ${colors.transparent}
+
+line-size = 3
+
+padding-left = 1
+padding-right = 3
+
+module-margin-left = 1
+module-margin-right = 2
+
+;----------------------------
+; fonts
+
+font-0 = fixed:pixelsize=10;1
+font-1 = unifont:fontformat=truetype:size=8:antialias=false;0
+font-2 = siji:pixelsize=10;1
+
+;---------------------------
+; Module placement
+
+;modules-left = i3 spotify pulseaudio
+;modules-center = date wlan
+;modules-right = memory cpu battery temperature
+
+modules-left = i3 spotify pulseaudio
+modules-center = date
+modules-right = wlan memory cpu battery temperature
+;---------------------------
+
+tray-position = center
+tray-padding = 2
+tray-transparent = true
+;tray-background = #0063ff
+
+;wm-restack = bspwm
+;wm-restack = i3
+
+;override-redirect = true
+
+;scroll-up = bspwm-desknext
+;scroll-down = bspwm-deskprev
+
+;scroll-up = i3wm-wsnext
+;scroll-down = i3wm-wsprev
+
+cursor-click = pointer
+cursor-scroll = ns-resize
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+; HDMI bar
+
+[bar/secondary]
+;-----------------------------
+; Bar settings
+
+monitor = HDMI-1
+width = 100%
+height = 27
+radius = 0.0
+bottom = false
+fixed-center = true
+
+background = ${colors.background}
+foreground = ${colors.foreground}
+
+border-size = 0
+border-color = ${colors.transparent}
+
+line-size = 3
+
+padding-left = 1
+padding-right = 3
+
+module-margin-left = 1
+module-margin-right = 2
+
+;----------------------------
+; fonts
+
+font-0 = fixed:pixelsize=10;1
+font-1 = unifont:fontformat=truetype:size=8:antialias=false;0
+font-2 = siji:pixelsize=10;1
+
+;---------------------------
+; Module placement
+
+;modules-left = i3 spotify pulseaudio
+;modules-center = date wlan
+;modules-right = memory cpu battery temperature
+
+modules-left = i3 spotify pulseaudio
+modules-center = date
+modules-right = wlan memory cpu battery temperature
+;---------------------------
+
+tray-position = center
+tray-padding = 2
+tray-transparent = true
+;tray-background = #0063ff
+
+;wm-restack = bspwm
+;wm-restack = i3
+
+;override-redirect = true
+
+;scroll-up = bspwm-desknext
+;scroll-down = bspwm-deskprev
+
+;scroll-up = i3wm-wsnext
+;scroll-down = i3wm-wsprev
+
+cursor-click = pointer
+cursor-scroll = ns-resize
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+; modules
+
+; Left
+;=============================
+;=============================
+
+
+;-----------------------------
+; SPOTIFY
+
+[module/spotify]
+type = custom/script
+interval = 1
+format-prefix =
+format = <label>
+exec = python ~/polybar/polybar-spotify/spotify_status.py -f '{artist}: {song}'
+format-underline = ${colors.spotifyGreen}
+;-----------------------------
+
+;-----------------------------
+; I3
+
+[module/i3]
+type = internal/i3
+format = <label-state> <label-mode>
+index-sort = true
+wrapping-scroll = false
+
+; Only show workspaces on the same output as the bar
+;pin-workspaces = true
+
+label-mode-padding = 2
+label-mode-foreground = #000
+label-mode-background = ${colors.primary}
+
+; focused = Active workspace on focused monitor
+label-focused = %index%
+label-focused-background = ${colors.backgroundAlt}
+label-focused-underline = ${colors.i3Line}
+label-focused-padding = 2
+
+; unfocused = Inactive workspace on any monitor
+label-unfocused = %index%
+label-unfocused-padding = ${self.label-focused-padding}
+
+; visible = Active workspace on unfocused monitor
+label-visible = %index%
+label-visible-background = ${self.label-focused-background}
+label-visible-underline = ${self.label-focused-underline}
+label-visible-padding = ${self.label-focused-padding}
+
+; urgent = Workspace with urgency hint set
+label-urgent = %index%
+label-urgent-background = ${colors.alert}
+label-urgent-padding = ${self.label-focused-padding}
+
+; Separator in between workspaces
+; label-separator = |
+;-----------------------------
+
+;-----------------------------
+; VOLUME
+
+[module/pulseaudio]
+type = internal/pulseaudio
+
+sink = alsa_output.pci-0000_00_.3.analog-stereo
+
+format-volume = <label-volume> <bar-volume>
+label-volume = VOL %percentage%%
+label-volume-foreground = ${root.foreground}
+
+label-muted = muted
+label-muted-foreground = #666
+
+bar-volume-width = 10
+bar-volume-foreground-0 = #55aa55
+bar-volume-foreground-1 = #55aa55
+bar-volume-foreground-2 = #55aa55
+bar-volume-foreground-3 = #55aa55
+bar-volume-foreground-4 = #55aa55
+bar-volume-foreground-5 = #f5a70a
+bar-volume-foreground-6 = #ff5555
+bar-volume-gradient = false
+bar-volume-indicator = |
+bar-volume-indicator-font = 2
+bar-volume-fill = //
+bar-volume-fill-font = 2
+bar-volume-empty = ─
+bar-volume-empty-font = 2
+bar-volume-empty-foreground = ${colors.foregroundAlt}
+;----------------------------
+
+; Center
+;=============================
+;=============================
+
+;-----------------------------
+; Date
+
+[module/date]
+type = internal/date
+interval = 5
+
+date = "%A, %B %d (%m/%d)"
+date-alt = "%m-%d-%y"
+
+time = "%l:%M"
+time-alt = %l:%M
+
+format-prefix =
+format-prefix-foreground = ${colors.foreground}
+format-underline = #0a6cf5
+
+label = %date% %time%
+;-----------------------------
+
+;-----------------------------
+; wlan
+
+[module/wlan]
+type = internal/network
+interface = wlp2s0
+interval = 3.0
+
+format-connected = <ramp-signal> <label-connected>
+format-NAME-foreground = ${colors.spotifyGreen}
+;format-connected = <label-connected>
+format-connected-underline = #9f78e1
+;label-connected = %essid%
+label-connected = "Connected"
+
+format-disconnected = "disconnected"
+;format-disconnected = <label-disconnected>
+;format-disconnected-underline = ${self.format-connected-underline}
+;label-disconnected = %ifname% disconnected
+;label-disconnected-foreground = ${colors.foreground-alt}
+
+ramp-signal-0 = :(
+ramp-signal-1 = |
+ramp-signal-2 = ||
+ramp-signal-3 = |||
+ramp-signal-4 = ||||
+ramp-signal-foreground = ${colors.foreground}
+;-----------------------------
+
+; Right
+;=============================
+;=============================
+
+;-----------------------------
+; CPU
+
+[module/cpu]
+type = internal/cpu
+interval = 2
+format-prefix =
+format-prefix-foreground = ${colors.foregroundAlt}
+format-underline = #f90000
+
+bar-cpu-format = %percentage:2%
+bar-cpu-width = 10
+bar-cpu-foreground-0 = ${colors.spotifyGreen}
+bar-cpu-foreground-1 = ${colors.spotifyGreen}
+bar-cpu-foreground-2 = ${colors.spotifyGreen}
+bar-cpu-foreground-3 = ${colors.spotifyGreen}
+bar-cpu-foreground-4 = ${colors.spotifyGreen}
+bar-cpu-foreground-5 = #f5a70a
+bar-cpu-foreground-6 = #ff5555
+bar-cpu-gradient = false
+bar-cpu-indicator = |
+bar-cpu-indicator-font = 2
+bar-cpu-fill = //
+bar-cpu-fill-font = 2
+bar-cpu-empty = ─
+bar-cpu-empty-font = 2
+bar-cpu-empty-foreground = ${colors.foregroundAlt}
+
+format-cpu = <label-cpu> <bar-cpu>
+label = CPU: %percentage:2%%
+;------------------------------
+
+;------------------------------
+; RAM
+
+[module/memory]
+type = internal/memory
+interval = 2
+format-prefix =
+format-prefix-foreground = ${colors.foregroundAlt}
+format-underline = #4bffdc
+label-active-font = 2
+label = RAM: %percentage_used%%;
+;------------------------------
+
+;------------------------------
+; Battery
+
+[module/battery]
+type = internal/battery
+battery = BAT0
+adapter = AC0
+full-at = 98
+
+format-charging = Battery: <label-charging>
+format-charging-underline = #ffb52a
+
+format-discharging = Battery: <label-discharging>
+format-discharging-underline = #66ccff
+
+format-full-prefix =
+format-full-prefix-foreground = ${colors.foregroundAlt}
+format-full-underline = #00e68a
+
+ramp-capacity-0 = 
+ramp-capacity-1 = 
+ramp-capacity-2 = 
+ramp-capacity-foreground = ${colors.foreground-alt}
+
+animation-charging-0 = 
+animation-charging-1 = 
+animation-charging-2 = 
+animation-charging-foreground = ${colors.foreground-alt}
+animation-charging-framerate = 750
+
+animation-discharging-0 = 
+animation-discharging-1 = 
+animation-discharging-2 = 
+animation-discharging-foreground = ${colors.foreground-alt}
+animation-discharging-framerate = 750
+;---------------------------------
+
+;---------------------------------
+; TEMPERATURE
+
+[module/temperature]
+type = internal/temperature
+thermal-zone = 0
+warn-temperature = 60
+
+format = <label>
+format-underline = #f50a4d
+format-warn = <label-warn>
+format-warn-underline = ${self.format-underline}
+
+label = %temperature-c%
+label-warn = %temperature-c%
+label-warn-foreground = ${colors.secondary}
+
+ramp-0 = 
+ramp-1 = 
+ramp-2 = 
+ramp-foreground = ${colors.foreground-alt}
+;--------------------------------
